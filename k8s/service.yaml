@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecg-ui
+  labels:
+    app: ecg-ui
+spec:
+  type: ClusterIP
+  selector:
+    app: ecg-ui
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8501

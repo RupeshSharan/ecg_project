@@ -1,0 +1,107 @@
+# ============================================================
+#  ECG Quantization Project — Central Configuration
+# ============================================================
+
+data:
+  raw_path: "data/raw"
+  processed_path: "data/processed"
+  splits_path: "data/splits"
+  fs: 360                      # sampling frequency (Hz)
+  window: 180                  # samples each side of R-peak (total beat = 360)
+  test_size: 0.30
+  val_size: 0.50               # of the remaining temp split → 15% each
+
+  aami_map:
+    N: 0
+    L: 0
+    R: 0
+    e: 0
+    j: 0
+    A: 1
+    a: 1
+    J: 1
+    S: 1
+    V: 2
+    E: 2
+    F: 3
+    "/": 4
+    f: 4
+    Q: 4
+
+  class_names:
+    - "Normal"
+    - "SVEB"
+    - "VEB"
+    - "Fusion"
+    - "Paced"
+
+  records:
+    - "100"
+    - "101"
+    - "103"
+    - "105"
+    - "106"
+    - "107"
+    - "108"
+    - "109"
+    - "111"
+    - "112"
+    - "113"
+    - "114"
+    - "115"
+    - "116"
+    - "117"
+    - "118"
+    - "119"
+    - "121"
+    - "122"
+    - "123"
+    - "124"
+    - "200"
+    - "201"
+    - "202"
+    - "203"
+    - "205"
+    - "207"
+    - "208"
+    - "209"
+    - "210"
+    - "212"
+    - "213"
+    - "214"
+    - "215"
+    - "217"
+    - "219"
+    - "220"
+    - "221"
+    - "222"
+    - "223"
+    - "228"
+    - "230"
+    - "231"
+    - "232"
+    - "233"
+    - "234"
+
+training:
+  epochs: 50
+  batch_size: 128
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  patience: 10                 # early stopping patience
+  seed: 42
+
+models:
+  input_length: 360
+  num_classes: 5
+  checkpoint_dir: "results/checkpoints"
+
+quantization:
+  onnx_dir: "results/onnx_models"
+  onnx_opset: 18
+  tflite_dir: "results/tflite_models"
+  calibration_samples: 1000
+
+results:
+  figures_dir: "results/figures"
+  metrics_dir: "results/metrics"

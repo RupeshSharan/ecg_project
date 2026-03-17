@@ -1,0 +1,17 @@
+venv/
+__pycache__/
+.pytest_cache/
+
+# Local datasets and generated artifacts
+data/
+results/
+
+# Environment files
+.env
+.env.*
+
+# Optional editor/system files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
