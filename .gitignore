@@ -3,8 +3,19 @@ __pycache__/
 .pytest_cache/
 
 # Local datasets and generated artifacts
-data/
-results/
+data/*
+!data/splits/
+data/splits/*
+!data/splits/X_test.npy
+!data/splits/y_test.npy
+
+results/*
+!results/checkpoints/
+!results/metrics/
+results/checkpoints/*
+!results/checkpoints/*_best.pt
+results/metrics/*
+!results/metrics/*_metrics.json
 
 # Environment files
 .env
