@@ -103,6 +103,10 @@ def inject_styles() -> None:
             color: #486581;
             font-size: 0.95rem;
         }
+        /* Hide "Press Ctrl+Enter" hint */
+        [data-testid="InputInstructions"] {
+            display: none !important;
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -316,6 +320,8 @@ def render_inference_tab() -> None:
             placeholder="0.02, -0.10, 0.18, ... (up to 360 values)",
             height=120,
         )
+        st.button("Analyze Custom Values ➡️", type="primary")
+        
         if raw.strip():
             try:
                 vals = np.array([float(v.strip()) for v in raw.split(",") if v.strip()], dtype=np.float32)
