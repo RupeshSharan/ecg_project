@@ -448,8 +448,12 @@ def render_guide_tab() -> None:
 
 
 def main() -> None:
-    st.set_page_config(page_title="ECG Inference UI", layout="wide")
+    st.set_page_config(page_title="ECG Inference UI", layout="wide", initial_sidebar_state="expanded")
     inject_styles()
+    
+    with st.sidebar:
+        st.title("ECG Settings")
+        st.info("Use the main tabs to switch between Inference and Metrics.")
 
     st.title("ECG Arrhythmia Intelligence Dashboard")
     st.caption("Run predictions on ECG beats and inspect model performance metrics.")
