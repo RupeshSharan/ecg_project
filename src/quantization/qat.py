@@ -21,7 +21,7 @@ from torch.utils.data import DataLoader, TensorDataset
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, PROJECT_ROOT)
 
-from src.evaluation.evaluator import evaluate_model, get_model_size_mb
+from src.evaluation.evaluator import evaluate_model, get_model_size_mb, plot_training_history
 from src.models.cnn1d import CNN1D
 from src.quantization.ptq import QuantizableCNN1D, fuse_quantizable_cnn1d, load_pretrained
 from src.training.trainer import compute_class_weights
@@ -81,6 +81,8 @@ def qat_train(model_name="cnn1d", qat_epochs=10, lr=1e-4, batch_size=128):
     best_val_acc = 0.0
     best_state = copy.deepcopy(qat_model.state_dict())
 
+    history = {"train_loss": [], "val_loss": [], "train_acc": [], "val_acc": []}
+
     for epoch in range(1, qat_epochs + 1):
         qat_model.train()
         running_loss = 0.0
@@ -104,14 +106,23 @@ def qat_train(model_name="cnn1d", qat_epochs=10, lr=1e-4, batch_size=128):
         qat_model.eval()
         val_correct = 0
         val_total = 0
+        running_val_loss = 0.0
         with torch.no_grad():
             for xb, yb in val_loader:
                 logits = qat_model(xb)
+                loss = criterion(logits, yb)
+                running_val_loss += loss.item() * xb.size(0)
                 val_correct += (logits.argmax(1) == yb).sum().item()
                 val_total += xb.size(0)
 
+        val_loss = running_val_loss / val_total
         val_acc = val_correct / val_total
         scheduler.step()
+
+        history["train_loss"].append(train_loss)
+        history["val_loss"].append(val_loss)
+        history["train_acc"].append(train_acc)
+        history["val_acc"].append(val_acc)
 
         print(
             f"  Epoch {epoch:2d}/{qat_epochs} | "
@@ -143,6 +154,9 @@ def qat_train(model_name="cnn1d", qat_epochs=10, lr=1e-4, batch_size=128):
         metrics_dir=MET_DIR,
         device=device,
     )
+    
+    plot_training_history(history, model_name=model_name, precision_tag="qat_int8", figures_dir=FIG_DIR)
+    
     return metrics
 
 

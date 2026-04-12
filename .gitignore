@@ -1,6 +1,15 @@
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
 venv/
 __pycache__/
 .pytest_cache/
+*.pyc
+.ipynb_checkpoints/
 
 # Local datasets and generated artifacts
 data/*
@@ -9,17 +18,31 @@ data/splits/*
 !data/splits/X_test.npy
 !data/splits/y_test.npy
 
+# Results / Outputs
 results/*
 !results/checkpoints/
 !results/metrics/
+
+# Only commit best models
 results/checkpoints/*
 !results/checkpoints/*_best.pt
+
+# Allow metrics files and summaries (JSONs, CSVs, TXTs)
 results/metrics/*
 !results/metrics/*_metrics.json
+!results/metrics/*.csv
+!results/metrics/*.txt
+
+# Ignore Exported ONNX binaries (too large for standard git without LFS)
+results/exported_models/*
+*.onnx
 
 # Environment files
 .env
 .env.*
+
+# Local scratch files 
+extracted_content.txt
 
 # Optional editor/system files
 *.log

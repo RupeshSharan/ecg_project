@@ -1,0 +1,11 @@
+              precision    recall  f1-score   support
+
+      Normal       1.00      0.98      0.99     13548
+        SVEB       0.64      0.96      0.77       417
+         VEB       0.93      0.98      0.95      1085
+      Fusion       0.65      0.92      0.76       120
+       Paced       0.99      1.00      0.99       584
+
+    accuracy                           0.98     15754
+   macro avg       0.84      0.96      0.89     15754
+weighted avg       0.98      0.98      0.98     15754

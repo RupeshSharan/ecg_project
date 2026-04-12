@@ -107,6 +107,25 @@ def inject_styles() -> None:
         [data-testid="InputInstructions"] {
             display: none !important;
         }
+        .custom-chip-container {
+            max-height: 180px;
+            overflow-y: auto;
+            border: 1px solid #dbe2ea;
+            border-radius: 8px;
+            padding: 8px;
+            background: #ffffff;
+            margin-bottom: 20px;
+        }
+        .custom-red-chip {
+            display: inline-block;
+            background-color: #ff4b4b;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.25rem;
+            margin: 0.2rem;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -384,8 +403,16 @@ def render_metrics_tab() -> None:
         st.header("Metrics Filters")
         models = sorted(df["model"].dropna().unique().tolist())
         precisions = sorted(df["precision"].dropna().unique().tolist())
-        selected_models = st.multiselect("Model", options=models, default=models)
-        selected_precisions = st.multiselect("Precision", options=precisions, default=precisions)
+        st.markdown("<p style='color: #154360; font-size:1.15rem; font-weight:600; margin-bottom:0.2rem;'>Model Options</p>", unsafe_allow_html=True)
+        models_html = "".join([f"<span class='custom-red-chip'>{m}</span>" for m in models])
+        st.markdown(f"<div class='custom-chip-container'>{models_html}</div>", unsafe_allow_html=True)
+
+        st.markdown("<p style='color: #154360; font-size:1.15rem; font-weight:600; margin-bottom:0.2rem;'>Precision Options</p>", unsafe_allow_html=True)
+        prec_html = "".join([f"<span class='custom-red-chip'>{p}</span>" for p in precisions])
+        st.markdown(f"<div class='custom-chip-container'>{prec_html}</div>", unsafe_allow_html=True)
+
+        selected_models = models
+        selected_precisions = precisions
         sort_col = st.selectbox(
             "Sort by",
             options=["accuracy", "f1_macro", "auc_roc", "latency_ms", "model_size_mb"],
@@ -457,9 +484,7 @@ def main() -> None:
     st.set_page_config(page_title="ECG Inference UI", layout="wide", initial_sidebar_state="expanded")
     inject_styles()
     
-    with st.sidebar:
-        st.title("ECG Settings")
-        st.info("Use the main tabs to switch between Inference and Metrics.")
+
 
     st.title("ECG Arrhythmia Intelligence Dashboard")
     st.caption("Run predictions on ECG beats and inspect model performance metrics.")
