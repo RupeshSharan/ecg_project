@@ -126,6 +126,29 @@ def inject_styles() -> None:
             font-size: 0.9rem;
             pointer-events: none;
         }
+        /* Login Page Styles */
+        .login-card {
+            background: #ffffff;
+            border: 1px solid #dbe2ea;
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2rem auto;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.12);
+            text-align: center;
+        }
+        .login-header {
+            margin-bottom: 2rem;
+        }
+        .login-header h1 {
+            color: #0f3b57 !important;
+            font-size: 1.8rem !important;
+            font-weight: 800 !important;
+        }
+        .login-header p {
+            color: #486581 !important;
+            font-size: 1rem !important;
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -480,11 +503,57 @@ def render_guide_tab() -> None:
     """)
 
 
+def render_login_page() -> None:
+    """Renders a premium login page."""
+    # Create a centered container using empty space
+    _, col, _ = st.columns([1, 2, 1])
+
+    with col:
+        st.markdown(
+            """
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>ECG Intelligence Login</h1>
+                    <p>Enter your credentials to access the dashboard</p>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        with st.form("login_form"):
+            username = st.text_input("Username")
+            password = st.text_input("Password", type="password")
+            submit = st.form_submit_button("Sign In", use_container_width=True, type="primary")
+
+            if submit:
+                if username == "admin" and password == "admin123":
+                    st.session_state.logged_in = True
+                    st.success("Login successful!")
+                    st.rerun()
+                else:
+                    st.error("Invalid username or password")
+
+
 def main() -> None:
     st.set_page_config(page_title="ECG Inference UI", layout="wide", initial_sidebar_state="expanded")
+    
+    # Initialize session state
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+
     inject_styles()
     
+    if not st.session_state.logged_in:
+        render_login_page()
+        return
 
+    # Sidebar Logout
+    with st.sidebar:
+        st.markdown("---")
+        if st.button("Logout", use_container_width=True):
+            st.session_state.logged_in = False
+            st.rerun()
 
     st.title("ECG Arrhythmia Intelligence Dashboard")
     st.caption("Run predictions on ECG beats and inspect model performance metrics.")
